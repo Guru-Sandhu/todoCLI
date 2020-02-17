@@ -4,47 +4,40 @@ const logSymbols = require('log-symbols');
 
 const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
+    terminal: false,
 });
 
-class Queue {
-    constructor () {
-        this.queue = [];
-    }
-    enqueue  (item){
-        this.queue.push(item);
-    }
-    
-    dequeue () {
-        return this.queue.shift();
-    }
-}
+let storedList = [];
 
-const storedList = new Queue();
-
-rl.question('Welcome to Todo CLI! \n ----------------- \n (v) View ~ (n) New ~ (cX) Complete ~ (dX) Delete ~ (q) Quit \n ', function (data) {
-    // to view file
-    if ( data === 'v') {
-        fs.readFile('./todolist.txt','utf8',(err,tasks) => {
-            if (err) throw err;
-            console.log(tasks);
-        })
-    }
-    // to add task to the file
-    if (data === 'n') {
-        rl.question('What ? \n', (newTask) => {
-            fs.appendFileSync('todolist.txt',newTask);
-        })
-    }
-    // to delete tasks from specific index
-    if (data[0] === 'd') {
-        const index = array.indexOf(data);
-        if (index !== -1) {
-            array.splice(index, 1);
+function mainScript() {
+    rl.question('Welcome to Todo CLI! \n ----------------- \n (v) View ~ (n) New ~ (cX) Complete ~ (dX) Delete ~ (q) Quit \n ', function (command) {
+        // to view file
+        if ( command === 'v') {
+            for (let task of storedList) {
+                console.log(`${task}`);
+            }
+            console.log('\n');
+            mainScript();
         }
-    }
-    // to quit the readline module
-    if (data === 'q') {
-        rl.close()
-    }
-})
+        // to add task to the file
+        if (command === 'n') {
+            rl.question('What ? \n', (newTask) => {
+                    storedList.push(newTask);
+                mainScript();
+            })
+        }
+        // to delete tasks from specific index
+        if (command[0] === 'd') {
+            if (command[1] !== -1) {
+                console.log(storedList.splice(command[1], 1));
+            }  
+            mainScript();
+        }
+        // to quit the readline module
+        if (command === 'q') {
+            rl.close()
+        }
+    })
+}
+mainScript()
