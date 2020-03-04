@@ -40,7 +40,7 @@ function mainScript() {
             }
             mainScript();
         } else if (command[0] === 'c') {
-            if (command.length === 1) {
+            if (command.length === 1 ) {
                 console.log('Please Try Again using Index')
             } else {
                 console.log(`Completed : "${storedList[command[1]].title}"`)
